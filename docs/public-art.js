@@ -82,16 +82,29 @@
           }
         }
       }
-      const surface=Array.from({length:64},(_,i)=>[outdoor?0:style.id+(i%2),0,0,0]);
+      const surface=Array.from({length:64},(_,i)=>{
+        const gardenTile=i%8===3||i%8===4||Math.floor(i/8)===3||Math.floor(i/8)===4?'garden-path':'garden-grass';
+        return [outdoor?gardenTile:style.id+(i%2),0,0,0];
+      });
       rooms[room.id+'-'+style.id]={doors:room.doors,surface,locations};
     }
   }
-  const underlays={};
+  const underlays={'garden-path':0xc3a87a,'garden-grass':0x829b61};
   for(const style of styles){underlays[style.id+'0']=style.floor;underlays[style.id+'1']=style.floor;}
-  const player=mesh([box(0,.56,0,.52,.62,.34,0x255f69),box(0,1.18,0,.35,.35,.33,0xc6946f),
-    box(-.39,.65,0,.17,.48,.17,0x4a8694),box(.39,.65,0,.17,.48,.17,0x4a8694),box(-.14,0,0,.19,.58,.22,0x424852),box(.14,0,0,.19,.58,.22,0x424852)]);
+  function figure(stride=0,work=0){
+    return mesh([box(0,.56,0,.52,.62,.34,0x255f69),box(0,1.18,0,.35,.35,.33,0xc6946f),
+      box(-.39,.65,-stride/2,.17,.48,.17,0x4a8694),box(.39,.65+work,stride/2,.17,.48,.17,0x4a8694),
+      box(-.14,0,stride,.19,.58,.22,0x424852),box(.14,0,-stride,.19,.58,.22,0x424852)]);
+  }
+  const idle=figure();
+  const walk=[0,.14,.24,.14,0,-.14,-.24,-.14].map(stride=>figure(stride));
+  const build=[0,.17,.33,.19,0].map(work=>figure(0,work));
   window.POH_LOCATIONS={styles,underlays,overlays:{},rooms:{},
     forRoom(id,style){return rooms[id+'-'+style]||rooms[id+'-cedar'];}};
-  window.HOUSE_MODELS={get:id=>models.get(id),player:()=>player,playerDuration:()=>650};
+  window.HOUSE_MODELS={get:id=>models.get(id),player(action,time){
+    if(action==='walk')return walk[Math.floor(time/65)%walk.length];
+    if(action==='build')return build[Math.floor(time/95)%build.length];
+    return idle;
+  },playerDuration:()=>950};
   window.POH_SPRITES={index:{},images:{}};
 })();
