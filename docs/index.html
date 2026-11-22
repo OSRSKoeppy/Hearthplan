@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#173d3d">
+  <meta name="description" content="Build an Old School RuneScape player-owned house in a 3D construction planner and track your materials, progress, and gold.">
+  <title>Hearthplan · OSRS House Builder</title>
+  <meta name="color-scheme" content="light">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="room-builder.css">
+  <link rel="stylesheet" href="public-style.css">
+  <script defer src="catalog.js"></script>
+  <script defer src="prices.js"></script>
+  <script defer src="public-art.js"></script>
+  <script defer src="icons.js"></script>
+  <script defer src="model.js"></script>
+  <script defer src="world.js"></script>
+  <script defer src="client.js"></script>
+  <script defer src="room-builder.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <header class="client-header">
+    <a class="game-brand" href="#planner" aria-label="Hearthplan house builder"><span>Hearthplan</span></a>
+    <nav aria-label="Planner views" id="navigation"></nav>
+    <div class="head-actions"><span id="save-state"></span><button id="plan-menu" class="neutral" aria-haspopup="dialog"></button></div>
+  </header>
+  <main>
+    <section id="planner" aria-label="Player-owned house builder">
+      <div class="game-frame">
+        <section class="scene-column" aria-label="House scene">
+          <div id="map-wrap">
+            <canvas id="map" tabindex="0" aria-label="3D house. Click to walk. Drag to orbit your character, or scroll to zoom."></canvas>
+            <div class="scene-top"><div id="action-text">Choose a hotspot</div><div id="map-mode" hidden></div></div>
+            <div class="camera-tools"><button data-camera="turn-left" aria-label="Rotate camera left" title="Rotate camera left">&#8630;</button><button data-camera="turn-right" aria-label="Rotate camera right" title="Rotate camera right">&#8631;</button><button data-camera="minus" aria-label="Zoom out">−</button><button data-camera="plus" aria-label="Zoom in">+</button><button data-camera="reset" aria-label="Reset camera" title="Reset camera"><span data-icon="fit"></span></button><button data-camera="help" aria-label="Camera controls" title="Camera controls">?</button></div>
+            <div class="scene-error" id="scene-error" hidden></div>
+          </div>
+          <section id="game-chat" aria-label="Construction messages"><div id="messages" role="log" aria-live="polite"></div><div class="chat-controls"><button id="toggle-log" aria-expanded="true">Game messages</button><span id="map-hint"></span></div></section>
+        </section>
+        <aside class="game-sidebar" aria-label="House controls">
+          <div class="radar-area"><div class="minimap" id="radar"><button id="map-open" aria-label="Open interactive floor plan"><canvas id="minimap" width="156" height="156" aria-hidden="true"></canvas></button><div class="map-ring"></div><button id="north" title="Face north" aria-label="Point camera north"><span aria-hidden="true">N</span></button></div>
+            <div class="floor-line"><span id="map-count"></span><select aria-label="Floor" id="floor"><option value="upper">Upper floor</option><option value="ground">Ground floor</option><option value="dungeon">Dungeon</option></select></div></div>
+          <div class="side-tabs" role="group" aria-label="House panels"><button data-panel="hotspots" title="Room hotspots">Build</button><button data-panel="rooms" title="House rooms"><span data-icon="home"></span>Rooms</button><button data-panel="costs" title="House budget">Budget</button></div>
+          <div id="inspector"></div>
+          <div class="side-bottom"><button id="build-switch" aria-pressed="true">Building mode</button><button id="build-room" class="primary">Room builder</button></div>
+        </aside>
+      </div>
+    </section>
+    <section id="room-builder" aria-labelledby="page-title" hidden>
+      <div class="layout-editor">
+        <aside class="layout-library" aria-label="Room library">
+          <h2>Room library</h2>
+          <label class="layout-search">Find a room<input id="layout-search" type="search" placeholder="Search rooms"></label>
+          <div id="layout-library"></div>
+        </aside>
+        <section class="layout-board" aria-label="Room layout">
+          <div class="layout-board-top">
+            <div class="layout-floors" role="group" aria-label="Layout floor">
+              <button type="button" data-layout-floor="upper">Upper floor</button>
+              <button type="button" data-layout-floor="ground">Ground floor</button>
+              <button type="button" data-layout-floor="dungeon">Dungeon</button>
+            </div>
+            <span id="layout-count"></span>
+          </div>
+          <p id="layout-instructions" aria-live="polite"></p>
+          <div id="layout-grid" class="layout-grid"></div>
+          <div id="layout-selection"></div>
+        </section>
+      </div>
+    </section>
+    <div id="detail-heading" class="page-heading" hidden><div><h1 id="page-title"></h1><p id="subtitle"></p></div><button id="headline-action" class="primary"></button></div>
+    <section id="detail" hidden></section>
+    <section class="summary" aria-label="Build summary"><div id="metrics"></div></section>
+    <footer><span id="plan-name"></span><span>Unofficial OSRS fan tool · <button id="credits">Data &amp; estimates</button></span></footer>
+  </main>
+  <div id="choose-option" hidden></div>
+  <dialog id="dialog"><div id="dialog-content"></div></dialog>
+  <input type="file" accept=".json,application/json" id="import-file" hidden>
+  <div id="notice" role="status" aria-live="polite"></div>
+</body></html>
